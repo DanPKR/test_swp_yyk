@@ -3,15 +3,15 @@ package com.dtsl.swipe_cards_fragment_yuyakaido;
 import android.content.Context;
 import android.os.Bundle;
 
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
+import androidx.fragment.app.Fragment;
+
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.dtsl.swipe_cards_fragment_yuyakaido.dummy.DummyContent;
 import com.yuyakaido.android.cardstackview.*;
@@ -25,7 +25,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class SwipeFragment extends Fragment {
+public class SwipeFragment extends Fragment implements CardStackListener{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -67,13 +67,20 @@ public class SwipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
 
-        
+        this.cardStackView = view.findViewById(R.id.card_stack_view);
+        this.cardStackLayoutManager = new CardStackLayoutManager(getContext());
+
         this.userAdapter=new UserAdapter(this.GetUsers());
-        cardStackLayoutManager.setStackFrom(StackFrom.None);
-        cardStackLayoutManager.setVisibleCount(3);
-        cardStackView.setLayoutManager(this.cardStackLayoutManager);
-        cardStackView.setAdapter(this.userAdapter);
+
+        this.cardStackLayoutManager.setStackFrom(StackFrom.Top);
+        this.cardStackLayoutManager.setVisibleCount(3);
+        this.cardStackLayoutManager.setDirections(Direction.FREEDOM);
+
+        this.cardStackView.setLayoutManager(this.cardStackLayoutManager);
+        this.cardStackView.setAdapter(this.userAdapter);
+
         return view;
+
     }
 
 
@@ -104,6 +111,44 @@ public class SwipeFragment extends Fragment {
         list.add(new DummyContent("Carlos", "30"));
         return  list;
     }
+
+
+
+
+    @Override
+    public void onCardDragging(Direction direction, float ratio) {
+        Log.d("dragging to :", direction.name());
+
+    }
+
+    @Override
+    public void onCardSwiped(Direction direction) {
+        Log.d("swiped to :", direction.name());
+    }
+
+    @Override
+    public void onCardRewound() {
+
+    }
+
+    @Override
+    public void onCardCanceled() {
+
+    }
+
+    @Override
+    public void onCardAppeared(View view, int position) {
+
+    }
+
+    @Override
+    public void onCardDisappeared(View view, int position) {
+
+    }
+
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this
